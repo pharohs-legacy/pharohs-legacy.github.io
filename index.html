@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharaoh's Legacy</title>
+    <meta name="description" content="Embark on an educational journey through ancient Egypt. Learn hieroglyphics, explore pyramids, and uncover the secrets of the pharaohs.">
+    <meta name="keywords" content="ancient egypt, educational game, hieroglyphics, pharaoh, pyramid, history">
+    <meta name="author" content="Ali">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Papyrus&display=swap" rel="stylesheet">
+    
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#daa520">
+    <meta name="msapplication-TileColor" content="#daa520">
+    
+    <!-- Prevent zoom on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">>
+</head>
+<body>
+    <!-- Splash Screen -->
+        <div id="splashScreen" class="splash-screen">
+        <div class="pyramid-bg"></div>
+        <div class="splash-content">
+            <h1 class="game-title">PHARAOH'S LEGACY</h1>
+            <div class="hieroglyphs">𓂀 𓈖 𓇳 𓏺 𓊪</div>
+            <p class="made-by">Made by Ali Zain Hasan and Youjun Chen</p>
+            <div class="loading-bar">
+                <div class="loading-fill"></div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Character Setup Modal -->
+        <div id="characterSetup" class="character-setup-modal hidden">
+            <div class="setup-content">
+                <h2>Create Your Character</h2>
+                <div class="setup-section">
+                    <label for="characterNameInput">Choose Your Name:</label>
+                    <input type="text" id="characterNameInput" placeholder="Enter your name" maxlength="20">
+                </div>
+                <div class="setup-section">
+                    <label for="characterBioInput">Write Your Bio:</label>
+                    <textarea id="characterBioInput" placeholder="Tell us about yourself..." maxlength="100"></textarea>
+                </div>
+                <div class="setup-section">
+                    <label>Choose Your Avatar:</label>
+                    <div class="avatar-selection">
+                        <div class="avatar-option selected" data-avatar="👤" onclick="selectAvatar('👤')">👤</div>
+                        <div class="avatar-option" data-avatar="👨" onclick="selectAvatar('👨')">👨</div>
+                        <div class="avatar-option" data-avatar="👩" onclick="selectAvatar('👩')">👩</div>
+                        <div class="avatar-option" data-avatar="🧑" onclick="selectAvatar('🧑')">🧑</div>
+                        <div class="avatar-option" data-avatar="👨‍🎓" onclick="selectAvatar('👨‍🎓')">👨‍🎓</div>
+                        <div class="avatar-option" data-avatar="👩‍🎓" onclick="selectAvatar('👩‍🎓')">👩‍🎓</div>
+                    </div>
+                </div>
+                <button class="start-adventure-btn" onclick="startAdventure()">Start Adventure</button>
+            </div>
+        </div>
+
+    <!-- Main Game Container -->
+    <!-- Character Panel -->
+    <div id="gameContainer" class="game-container hidden">
+        <div class="game-layout">
+            <!-- Character Section -->
+            <div class="character-section" style="gap:20px;">
+                <div class="character-avatar-container">
+                    <div class="character-avatar" id="characterAvatar">👤</div>
+                </div>
+                <div class="character-details">
+                    <h2 class="character-name" id="characterName"></h2>
+                    <p class="character-bio" id="characterBio" style="color:darkgoldenrod">A curious soul seeking knowledge in the land of the pharaohs</p>
+                </div>
+            </div>
+
+            <!-- Left Sidebar (3/4 of screen) -->
+            <aside class="left-sidebar" style="height:fit-content">
+                <!-- Stats Panel -->
+                <section class="stats-panel">
+                    <h3>📊 Stats</h3>
+                    <div class="stat-item">
+                        <div class="stat-label">⚡ Health</div>
+                        <div class="stat-value" id="healthValue">100</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill health-fill" id="healthBar" style="width: 100%;"></div>
+                        </div>                    
+                    </div>
+            
+                
+
+                    <div class="stat-item">
+                        <div class="stat-label">🪙 Gold</div>
+                        <div class="stat-value" id="goldValue">50</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill gold-fill" id="goldBar" style="width: 25%"></div>
+                        </div>
+                    </div>
+                
+
+                    <div class="stat-item">
+                        <div class="stat-label">📚 Knowledge</div>
+                        <div class="stat-value" id="knowledgeValue" style="display:flex;justify-self:center">0</div>                    <div class="stat-bar">
+                            <div class="stat-fill knowledge-fill" id="knowledgeBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                
+
+                    <div class="stat-item">
+                        <div class="stat-label">🎂 Age</div>
+                        <div class="stat-value" id="ageValue" style="justify-self: center">16</div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-label">📅 Year</div>
+                        <div class="stat-value" id="yearValue">1323 BCE</div>
+                    </div>
+                </section>
+
+                <!-- Inventory Panel -->
+                <section class="inventory-panel">
+                    <h3>🎒 Inventory</h3>
+                    <div id="inventory" class="inventory">
+                        <!-- Inventory items will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Main Game Area -->
+                <main class="main-game">
+                    <div class="event-panel">
+                        <h2 id="eventTitle" class="event-title">Welcome to Ancient Egypt</h2>
+                        <div id="eventDescription" class="event-description">
+                            You stand at the edge of the great Nile River, watching the sun rise over the ancient land of Egypt. 
+                            The year is 1323 BCE, and you are about to embark on an incredible journey of discovery. 
+                            What path will you choose?
+                        </div>
+                        <div id="eventChoices" class="event-choices">
+                            <!-- Choices will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="control-buttons">
+                        <button class="control-btn store" onclick="openStore()">🏪 Marketplace</button>
+                        <button class="control-btn settings" onclick="openSettings()">⚙️ Settings</button>
+                    </div>
+                </main>
+            </aside>
+
+                
+
+            <!-- Right Sidebar (1/4 of screen) -->
+            <aside class="right-sidebar" style="height:fit-content"> 
+                <!-- Achievements Panel -->
+                <section class="achievements-panel" style="gap:20px;">
+                    <h3>🏆 Achievements</h3>
+                    <div id="achievements" class="achievements">
+                        <!-- Achievements will be populated by JavaScript -->
+                    </div>
+                </section>
+             
+                <!-- Daily Quests Panel -->
+                <section class="quests-panel">
+                    <h3>📋 Daily Quests</h3>
+                    <div id="dailyQuests" class="daily-quests">
+                        <!-- Daily quests will be populated by JavaScript -->
+                    </div>
+                </section>
+            </aside>  
+            
+            <aside class="mini-sidebar" style="margin-left: 255px;">
+                <!-- Add this content inside your existing <aside class="mini-sidebar"> -->
+                <section class="minigames-panel">
+                    <h3>🎮 Mini Games</h3>
+                    
+                    <!-- Game Tabs -->
+                    <div class="minigame-tabs">
+                        <button class="tab-btn active" onclick="switchMinigame('hieroglyph')">📜 Symbols</button>
+                        <button class="tab-btn" onclick="switchMinigame('math')">🔢 Numbers</button>
+                    </div>
+                    
+                    <!-- Hieroglyph Memory Game -->
+                    <div id="hieroglyphGame" class="minigame-content active">
+                        <h4>Symbol Memory</h4>
+                        <p class="game-instruction">Remember this symbol and its meaning!</p>
+                        <div class="hieroglyph-display">
+                            <div class="hieroglyph-symbol" id="currentSymbol">𓂀</div>
+                            <div class="symbol-meaning" id="symbolMeaning">Life</div>
+                        </div>
+                        <div class="game-controls">
+                            <button class="mini-btn" onclick="showHieroglyphTest()">Test Me!</button>
+                            <button class="mini-btn secondary" onclick="newHieroglyphSymbol()">New Symbol</button>
+                        </div>
+                        <div class="game-score">Streak: <span id="hieroglyphStreak">0</span></div>
+                    </div>
+                    
+                    <!-- Egyptian Math Game -->
+                    <div id="mathGame" class="minigame-content">
+                        <h4>Egyptian Calculator</h4>
+                        <p class="game-instruction">Convert Egyptian numerals to numbers:</p>
+                        <div class="math-display">
+                            <div class="egyptian-numeral" id="egyptianNumeral">𓏺</div>
+                            <div class="math-input-area">
+                                <input type="number" id="mathInput" placeholder="?" min="0" max="9999">
+                                <button class="mini-btn" onclick="checkMathAnswer()">Check</button>
+                            </div>
+                        </div>
+                        <div class="math-feedback" id="mathFeedback"></div>
+                        <div class="game-score">Score: <span id="mathScore">0</span></div>
+                        <button class="mini-btn secondary" onclick="newMathProblem()">New Problem</button>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="minigame-stats">
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">Games Played:</span>
+                            <span class="mini-stat-value" id="totalGamesPlayed">0</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">Best Streak:</span>
+                            <span class="mini-stat-value" id="bestStreak">0</span>
+                        </div>
+                    </div>
+                </section>
+            </aside>            
+            
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 2000; margin-top:35px">
+        <!-- Notifications will be added here dynamically -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+
+    <!-- Analytics (replace with your tracking code) -->
+    <script>
+        // Google Analytics or other analytics code
+        // window.dataLayer = window.dataLayer || [];
+        // function gtag(){dataLayer.push(arguments);}
+        // gtag('js', new Date());
+        // gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+
+    <!-- Error handling -->
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('Game Error:', e.error);
+            // You could send this to an error reporting service
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled Promise Rejection:', e.reason);
+            // You could send this to an error reporting service
+        });
+    </script>
+</body>
+</html>
